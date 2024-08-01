@@ -2,8 +2,8 @@ import { createUmi } from "@metaplex-foundation/umi-bundle-defaults"
 import { createSignerFromKeypair, signerIdentity, generateSigner, percentAmount } from "@metaplex-foundation/umi"
 import { createNft, mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
 
-import wallet from "../wba-wallet.json"
-import base58 from "bs58";
+import wallet from "./wallet/wba-wallet.json"
+import base58 from 'bs58';
 
 const RPC_ENDPOINT = "https://api.devnet.solana.com";
 const umi = createUmi(RPC_ENDPOINT);
@@ -16,11 +16,19 @@ umi.use(mplTokenMetadata())
 const mint = generateSigner(umi);
 
 (async () => {
-    // let tx = ???
-    // let result = await tx.sendAndConfirm(umi);
-    // const signature = base58.encode(result.signature);
+    const url =
+      'https://kzfgifhe2zp57g6ufll5yrfsvddwfiv4hh5tarttofshty3goftq.arweave.net/VkpkFOTWX9-b1CrX3ESyqMdiorw5-zBGc3FkeeNmcWc'
+    let tx = createNft(umi,{
+        mint,
+        name: 'Ruggy',
+        symbol: 'RGY',
+        uri: url,
+        sellerFeeBasisPoints: percentAmount(2)
+    })
+    let result = await tx.sendAndConfirm(umi);
+    const signature = base58.encode(result.signature);
     
-    // console.log(`Succesfully Minted! Check out your TX here:\nhttps://explorer.solana.com/tx/${signature}?cluster=devnet`)
+    console.log(`Succesfully Minted! Check out your TX here:\nhttps://explorer.solana.com/tx/${signature}?cluster=devnet`)
 
     console.log("Mint Address: ", mint.publicKey);
 })();

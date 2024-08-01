@@ -1,4 +1,4 @@
-import wallet from "../wba-wallet.json"
+import wallet from "../cluster1/wallet/wba-wallet.json"
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults"
 import { createGenericFile, createSignerFromKeypair, signerIdentity } from "@metaplex-foundation/umi"
 import { irysUploader } from "@metaplex-foundation/umi-uploader-irys"
@@ -16,13 +16,18 @@ umi.use(signerIdentity(signer));
 (async () => {
     try {
         //1. Load image
+        const file = './cluster1/generug.png';
         //2. Convert image to generic file.
+        const buffer = await readFile(file);
         //3. Upload image
+        const image = createGenericFile(buffer,'ruggy',{contentType:'image/png'});
 
         // const image = ???
 
         // const [myUri] = ??? 
-        // console.log("Your image URI: ", myUri);
+
+        const [imageUrl] = await umi.uploader.upload([image]);
+        console.log("Your image URI: ", imageUrl);
     }
     catch(error) {
         console.log("Oops.. Something went wrong", error);
